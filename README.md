@@ -1,10 +1,10 @@
 <p align="center">
-  <a href="https://raw.githubusercontent.com/CyberGems/CyberViewer/main/assets/icon.png?v=transparent-1">
-    <img src="https://raw.githubusercontent.com/CyberGems/CyberViewer/main/assets/icon.png?v=transparent-1" width="128" height="128" alt="CyberViewer logo" />
+  <a href="https://raw.githubusercontent.com/CyberGems/CyberViewer/main/assets/icon.png?v=2">
+    <img src="https://raw.githubusercontent.com/CyberGems/CyberViewer/main/assets/icon.png?v=2" width="128" height="128" alt="CyberViewer logo" />
   </a>
 </p>
 
-<h1 align="center">CyberViewer — Fast Windows Image Viewer</h1>
+<h1 align="center">CyberViewer — A modern, feature-packed image viewer for Windows</h1>
 
 <p align="center">
   <a href="https://github.com/CyberGems/CyberViewer/releases/latest">
