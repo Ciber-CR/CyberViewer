@@ -164,6 +164,15 @@ npm run build:portable   # portable only
 - Desktop/Start Menu shortcuts
 - Bilingual installer (en_US, es_ES)
 
+### 🛡️ Windows SmartScreen
+
+Windows may show a SmartScreen warning the first time you run the CyberViewer installer — this is expected until Windows builds enough reputation for the file. The same can appear when launching the portable build.
+
+To continue:
+
+1. Click **More info**.
+2. Click **Run anyway**.
+
 ---
 
 ## ⌨️ Keyboard Shortcuts
