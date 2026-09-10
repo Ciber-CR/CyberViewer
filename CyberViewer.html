@@ -9,7 +9,7 @@
 <style>html,body{background:#080a0e;color:#c8d8e8;margin:0;height:100%;overflow:hidden}</style>
 <link rel="stylesheet" href="css/app.css">
 </head>
-<body class="statusbar-visible" data-alpha-bg="checker-dark">
+<body class="statusbar-visible" data-alpha-bg="checker-dark" data-image-outline="off">
 <div id="topbar" style="position:fixed;top:0;left:0;width:100%;height:48px;z-index:999999;display:flex;align-items:center;background:var(--cyber-panel);border-bottom:1px solid var(--cyber-accent);">
   <div class="logo" id="logo-trigger">
     <img src="assets/icon.ico" class="logo-img" alt="CyberViewer Logo">
@@ -668,6 +668,16 @@
                   <option value="checker-light" data-i18n="cfg_alpha_bg_light">Cuadriculado claro</option>
                   <option value="solid" data-i18n="cfg_alpha_bg_solid">Sin cuadriculado</option>
                 </select>
+              </div>
+              <div class="config-row">
+                <div class="config-info">
+                  <div class="config-name" data-i18n="cfg_image_outline">Delineado de imagen</div>
+                  <div class="config-desc" data-i18n="cfg_image_outline_desc">Mostrar un delineado sutil alrededor de la imagen mostrada.</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="cfg-image-outline">
+                  <span class="slider"></span>
+                </label>
               </div>
             </div>
           </section>

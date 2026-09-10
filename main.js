@@ -91,6 +91,7 @@ function loadSettings() {
         if (data.app.hudAutoHideDelay === undefined) data.app.hudAutoHideDelay = 2000;
         if (data.app.disableTooltips === undefined) data.app.disableTooltips = false;
         if (data.app.alphaBackground === undefined) data.app.alphaBackground = 'checker-dark';
+        if (data.app.imageOutline === undefined) data.app.imageOutline = false;
         if (!Array.isArray(data.app.recentFiles)) data.app.recentFiles = [];
         if (!Array.isArray(data.app.recentFolders)) data.app.recentFolders = [];
         if (data.app.slideshowIntervalMs === undefined) data.app.slideshowIntervalMs = 3000;
@@ -134,6 +135,7 @@ function loadSettings() {
       disableTooltips: false,
       showTopHints: true,
       alphaBackground: 'checker-dark',
+      imageOutline: false,
       recentFiles: [],
       recentFolders: [],
       slideshowIntervalMs: 3000,

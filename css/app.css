@@ -1596,7 +1596,7 @@
     display: block;
     border-radius: 2px;
     pointer-events: none;
-    box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 2px rgba(var(--cyber-accent-rgb), 0.3);
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
     opacity: 0;
     visibility: hidden;
     transition: opacity 200ms ease, visibility 200ms ease;
@@ -1625,7 +1625,11 @@
       var(--alpha-dark-b) 0% 50%
     );
     background-size: var(--alpha-cell) var(--alpha-cell);
-    /* Softer frame so the grid defines the canvas, not a black glow */
+    /* Keep the grid readable without adding a default frame. */
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  }
+
+  body[data-alpha-bg="checker-dark"][data-image-outline="on"] #main-img {
     box-shadow:
       0 0 0 1px rgba(var(--cyber-accent-rgb), 0.22),
       0 8px 28px rgba(0, 0, 0, 0.45);
@@ -1638,9 +1642,19 @@
       var(--alpha-light-b) 0% 50%
     );
     background-size: var(--alpha-cell) var(--alpha-cell);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+  }
+
+  body[data-alpha-bg="checker-light"][data-image-outline="on"] #main-img {
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.18),
       0 8px 28px rgba(0, 0, 0, 0.5);
+  }
+
+  body[data-image-outline="on"] #main-img {
+    box-shadow:
+      0 0 40px rgba(0, 0, 0, 0.8),
+      0 0 2px rgba(var(--cyber-accent-rgb), 0.3);
   }
 
   /* Thumbnails: same grid so transparent previews are readable */

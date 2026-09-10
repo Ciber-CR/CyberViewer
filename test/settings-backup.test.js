@@ -16,12 +16,14 @@ describe('pickSettings', () => {
   it('keeps known booleans and drops junk', () => {
     const out = pickSettings({
       closeToTray: true,
+      imageOutline: true,
       language: 'es',
       accentColor: '#FF2D78',
       extra: 'nope',
       hudAutoHideDelay: 2500
     });
     assert.equal(out.closeToTray, true);
+    assert.equal(out.imageOutline, true);
     assert.equal(out.language, 'es');
     assert.equal(out.accentColor, '#ff2d78');
     assert.equal(out.hudAutoHideDelay, 2500);

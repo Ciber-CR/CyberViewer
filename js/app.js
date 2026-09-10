@@ -115,6 +115,7 @@ const state = {
       toolbarOpen: true,
       // Transparency grid behind alpha pixels: checker-dark | checker-light | solid
       alphaBackground: 'checker-dark',
+      imageOutline: false,
       recentFiles: [],
       recentFolders: [],
       // Slideshow
@@ -6185,6 +6186,7 @@ function openConfig() {
   $('cfg-hud-delay-val').textContent = (s.hudAutoHideDelay / 1000).toFixed(1) + 's';
   const alphaBg = normalizeAlphaBackground(s.alphaBackground);
   if ($('cfg-alpha-bg')) $('cfg-alpha-bg').value = alphaBg;
+  if ($('cfg-image-outline')) $('cfg-image-outline').checked = s.imageOutline === true;
 
   // Slideshow settings
   if ($('cfg-ss-interval')) $('cfg-ss-interval').value = String(getSlideshowIntervalMs());
@@ -6274,6 +6276,7 @@ function collectConfigSettings() {
     disableTooltips: $('cfg-disable-tooltips').checked,
     hudAutoHideDelay: parseInt($('cfg-hud-delay').value, 10),
     alphaBackground: normalizeAlphaBackground($('cfg-alpha-bg') && $('cfg-alpha-bg').value),
+    imageOutline: !!($('cfg-image-outline') && $('cfg-image-outline').checked),
     dblClickAction: normalizeDblClickAction(($('cfg-dbl-click') && $('cfg-dbl-click').value) || 'fullscreen'),
     navZoomMode: normalizeNavZoomMode(($('cfg-nav-zoom-mode') && $('cfg-nav-zoom-mode').value) || 'reset'),
     slideshowIntervalMs: parseInt(($('cfg-ss-interval') && $('cfg-ss-interval').value) || '3000', 10),
@@ -6308,6 +6311,7 @@ function getFactoryAppSettings() {
     disableTooltips: false,
     showTopHints: true,
     alphaBackground: 'checker-dark',
+    imageOutline: false,
     slideshowIntervalMs: 3000,
     slideshowLoop: true,
     slideshowEnterFullscreen: true,
@@ -6642,6 +6646,7 @@ function applySettings() {
 
   // Transparency / alpha checkerboard behind transparent pixels
   applyAlphaBackground(s.alphaBackground);
+  applyImageOutline(s.imageOutline);
 
   // Animated GIF playback
   syncGifAnimationSetting();
@@ -6679,6 +6684,15 @@ function applyAlphaBackground(value) {
   document.body.setAttribute('data-alpha-bg', mode);
   if (state.settings && state.settings.app) {
     state.settings.app.alphaBackground = mode;
+  }
+}
+
+/** Apply body data attribute for the optional image outline. */
+function applyImageOutline(value) {
+  const enabled = value === true;
+  document.body.setAttribute('data-image-outline', enabled ? 'on' : 'off');
+  if (state.settings && state.settings.app) {
+    state.settings.app.imageOutline = enabled;
   }
 }
 
