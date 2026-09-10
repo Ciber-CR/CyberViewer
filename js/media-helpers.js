@@ -223,6 +223,17 @@
     return Math.round(t * 1000);
   }
 
+  /**
+   * Zoom that maps one captured physical screen pixel to one physical pixel
+   * on the current display. Windows/Electron render CSS px in logical pixels,
+   * so a 150% display needs a 1 / 1.5 image scale.
+   * @param {number} devicePixelRatio
+   */
+  function screenCaptureZoom(devicePixelRatio) {
+    const dpr = Number(devicePixelRatio);
+    return Number.isFinite(dpr) && dpr > 0 ? 1 / dpr : 1;
+  }
+
   /** Parent directory of a file path (Windows / POSIX separators). */
   function folderDirFromPath(filePath) {
     if (!filePath) return '';
@@ -340,6 +351,7 @@
     formatLikelyHasAlpha,
     sliderToZoom,
     zoomToSlider,
+    screenCaptureZoom,
     folderDirFromPath,
     folderNameFromPath,
     PRINT_PAGE_INCHES,

@@ -10,6 +10,10 @@ const mimeFromPath = CVMedia.mimeFromPath || function () { return ''; };
 const formatAspectRatio = CVMedia.formatAspectRatio || function () { return '-'; };
 const formatMegapixels = CVMedia.formatMegapixels || function () { return '-'; };
 const formatLikelyHasAlpha = CVMedia.formatLikelyHasAlpha || function () { return false; };
+const screenCaptureZoom = CVMedia.screenCaptureZoom || function (dpr) {
+  const scale = Number(dpr);
+  return Number.isFinite(scale) && scale > 0 ? 1 / scale : 1;
+};
 
 function syncCurrentIndex(idx) {
   state.currentIdx = idx;
@@ -1903,12 +1907,7 @@ function executeAction(data) {
     case 'reset-zoom': {
       const im = state.images[state.current];
       if (im && im.w) {
-        state.viewMode = 'original';
-        state.selectedViewMode = 'original';
-        state.zoom = 1;
-        state.panX = 0;
-        state.panY = 0;
-        applyTransform(false);
+        setOriginalView(false);
         updateFileStats();
       }
       break;
@@ -2473,7 +2472,7 @@ function displayImage(url, w, h, direction) {
   mainImg.style.height = h + 'px';
 
   if (state.viewMode === 'original') {
-    state.zoom = 1;
+    state.zoom = getOriginalZoom();
     state.panX = 0;
     state.panY = 0;
   } else if (state.viewMode === 'custom') {
@@ -4053,6 +4052,24 @@ function applyTransform(animate, opts = {}) {
   updateZoomHUD(opts);
 }
 
+/**
+ * The image bitmap is measured in physical pixels, while CSS px in Electron
+ * are logical display pixels. Compensate for Windows display scaling so a
+ * screenshot appears at the same on-screen size as the captured widget.
+ */
+function getOriginalZoom() {
+  return screenCaptureZoom(typeof window !== 'undefined' ? window.devicePixelRatio : 1);
+}
+
+function setOriginalView(animate = false) {
+  state.viewMode = 'original';
+  state.selectedViewMode = 'original';
+  state.zoom = getOriginalZoom();
+  state.panX = 0;
+  state.panY = 0;
+  applyTransform(animate);
+}
+
 /** Reflect the active view mode on the Fit / 1:1 action buttons (like the fullscreen button). */
 function syncViewModeButtons() {
   const fitBtn = $('btn-fit-hud');
@@ -4807,24 +4824,18 @@ viewerWrap.addEventListener('dblclick', e => {
     return;
   }
   if (action === 'original') {
-    state.viewMode = 'original';
-    state.zoom = 1;
-    state.panX = 0;
-    state.panY = 0;
-    applyTransform(true);
+    setOriginalView(true);
     return;
   }
   // action === 'toggle-zoom' (legacy fit <-> 1:1)
-  if (Math.abs(state.zoom - 1) < 0.05) {
+  if (state.viewMode === 'original') {
     state.viewMode = 'fit';
     state.zoom = fitScale;
     state.panX = 0;
     state.panY = 0;
   } else {
-    state.viewMode = 'original';
-    state.zoom = 1;
-    state.panX = 0;
-    state.panY = 0;
+    setOriginalView(true);
+    return;
   }
   applyTransform(true);
 });
@@ -5467,10 +5478,7 @@ $('btn-fit-hud').addEventListener('click', () => {
 
 $('btn-orig-hud').addEventListener('click', () => {
   if (!checkImageLoaded()) return;
-  state.viewMode = 'original';
-  state.selectedViewMode = 'original';
-  state.zoom = 1; state.panX = 0; state.panY = 0;
-  applyTransform(true);
+  setOriginalView(true);
 });
 
 $('btn-fs-hud').addEventListener('click', () => {
@@ -5754,7 +5762,7 @@ function scheduleFullscreenRefit() {
     const im = state.images[state.current];
     if (!im) return;
     if (state.viewMode === 'original') {
-      state.zoom = 1;
+      state.zoom = getOriginalZoom();
       state.panX = 0;
       state.panY = 0;
       applyTransform(false);
@@ -5807,8 +5815,37 @@ window.addEventListener('resize', () => {
   if (state.images.length && state.current >= 0) {
     const im = state.images[state.current];
     if (im && im.w && state.viewMode === 'fit') fitToWindow(im.w, im.h);
+    else if (im && im.w && state.viewMode === 'original') {
+      state.zoom = getOriginalZoom();
+      state.panX = 0;
+      state.panY = 0;
+      applyTransform(false);
+    }
   }
 });
+
+// A Windows monitor change can update devicePixelRatio without a normal
+// layout change. Re-arm the resolution query after every change so the
+// calibrated original view follows 150% <-> 125% monitor moves.
+function watchDisplayScale() {
+  if (typeof window.matchMedia !== 'function') return;
+  const dpr = Number(window.devicePixelRatio) || 1;
+  const query = window.matchMedia(`(resolution: ${dpr}dppx)`);
+  const onChange = () => {
+    if (typeof query.removeEventListener === 'function') query.removeEventListener('change', onChange);
+    else if (typeof query.removeListener === 'function') query.removeListener(onChange);
+    if (state.images.length && state.current >= 0 && state.viewMode === 'original') {
+      state.zoom = getOriginalZoom();
+      state.panX = 0;
+      state.panY = 0;
+      applyTransform(false);
+    }
+    watchDisplayScale();
+  };
+  if (typeof query.addEventListener === 'function') query.addEventListener('change', onChange);
+  else if (typeof query.addListener === 'function') query.addListener(onChange);
+}
+watchDisplayScale();
 
 // ── MODAL HELPERS ──
 function openModal(id) {

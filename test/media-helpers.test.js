@@ -14,6 +14,7 @@ const {
   formatLikelyHasAlpha,
   sliderToZoom,
   zoomToSlider,
+  screenCaptureZoom,
   folderDirFromPath,
   folderNameFromPath
 } = require('../js/media-helpers');
@@ -162,6 +163,20 @@ describe('slider zoom mapping', () => {
   it('clamps extremes', () => {
     assert.ok(sliderToZoom(0, 0.05, 20) <= 0.051);
     assert.ok(sliderToZoom(1000, 0.05, 20) >= 19);
+  });
+});
+
+describe('screen capture zoom', () => {
+  it('compensates Windows display scaling', () => {
+    assert.equal(screenCaptureZoom(1), 1);
+    assert.ok(Math.abs(screenCaptureZoom(1.25) - 0.8) < 1e-12);
+    assert.ok(Math.abs(screenCaptureZoom(1.5) - (2 / 3)) < 1e-12);
+  });
+
+  it('falls back safely for invalid display scales', () => {
+    assert.equal(screenCaptureZoom(0), 1);
+    assert.equal(screenCaptureZoom(Number.NaN), 1);
+    assert.equal(screenCaptureZoom(null), 1);
   });
 });
 
