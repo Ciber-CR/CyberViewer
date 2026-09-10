@@ -109,9 +109,47 @@ describe('updater helpers', () => {
     try {
       mod.initUpdater({ checkUpdatesOnStartup: false });
       assert.equal(autoUpdater.autoDownload, false);
+      assert.equal(autoUpdater.autoInstallOnAppQuit, false);
       assert.equal(typeof ipcHandlers['update:check'], 'function');
       assert.equal(typeof ipcHandlers['update:download'], 'function');
       assert.equal(typeof ipcHandlers['update:install'], 'function');
+      assert.equal(typeof ipcHandlers['update:get-status'], 'function');
+    } finally {
+      restore();
+    }
+  });
+
+  it('normalizes release notes and keeps release metadata in status', () => {
+    const { mod, listeners, ipcHandlers, restore } = loadUpdaterWithStubs({
+      PACKAGED: '1'
+    });
+    try {
+      assert.equal(
+        mod.githubReleaseUrl('1.2.3'),
+        'https://github.com/CyberGems/CyberViewer/releases/tag/v1.2.3'
+      );
+      assert.equal(
+        mod.extractReleaseNotes({
+          version: '1.2.3',
+          releaseNotes: '<h2>Highlights</h2><ul><li>Faster startup</li></ul>'
+        }),
+        '### Highlights\n- Faster startup'
+      );
+
+      mod.initUpdater({ checkUpdatesOnStartup: false });
+      listeners['update-available']({
+        version: '1.2.3',
+        releaseNotes: '## Highlights\n\n- Faster startup'
+      });
+
+      const status = mod.getLastUpdateStatus();
+      assert.deepEqual(status, {
+        state: 'available',
+        version: '1.2.3',
+        releaseNotes: '## Highlights\n\n- Faster startup',
+        releaseUrl: 'https://github.com/CyberGems/CyberViewer/releases/tag/v1.2.3'
+      });
+      assert.deepEqual(ipcHandlers['update:get-status'](), status);
     } finally {
       restore();
     }

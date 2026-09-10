@@ -4870,7 +4870,7 @@
     rgba(var(--cyber-logo-glow-rgb), 0.18) 40%,
     transparent 72%);
   transform: translate(-50%, -50%) scale(0.85);
-  animation: about-logo-halo 4.8s ease-in-out infinite;
+  animation: about-logo-halo 5.6s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
 }
@@ -4884,7 +4884,7 @@
   border-radius: 0;
   object-fit: contain;
   filter: drop-shadow(0 0 8px rgba(var(--cyber-logo-glow-rgb), 0.6));
-  animation: about-logo-glow 4.8s ease-in-out infinite;
+  animation: about-logo-glow 5.6s ease-in-out infinite;
   user-select: none;
   pointer-events: none;
 }
@@ -5074,6 +5074,94 @@
   border-color: rgba(var(--cyber-accent3-rgb), 0.45);
   background: rgba(var(--cyber-accent3-rgb), 0.1);
   color: var(--cyber-accent3);
+}
+
+.about-update-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.about-update-version-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.about-update-version-card.latest {
+  border-color: rgba(var(--cyber-accent-rgb), 0.24);
+  background: rgba(var(--cyber-accent-rgb), 0.06);
+}
+.about-update-version-label,
+.about-release-notes-heading {
+  font-size: 10px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--cyber-muted);
+}
+.about-update-version-card.latest .about-update-version-label {
+  color: var(--cyber-accent);
+}
+.about-update-version-value {
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cyber-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.about-update-version-card.latest .about-update-version-value {
+  color: var(--cyber-accent);
+}
+.about-release-notes {
+  margin-bottom: 10px;
+}
+.about-release-notes-heading {
+  margin-bottom: 6px;
+}
+.about-release-notes-body {
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 9px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--cyber-text);
+  font-size: 11px;
+  line-height: 1.45;
+  word-break: break-word;
+  scrollbar-width: thin;
+}
+.about-release-note-heading {
+  margin: 2px 0 5px;
+  color: var(--cyber-text);
+  font-size: 11px;
+  font-weight: 700;
+}
+.about-release-note-list {
+  margin: 2px 0 6px;
+  padding-left: 16px;
+}
+.about-release-note-item {
+  margin: 2px 0;
+}
+.about-release-note-paragraph {
+  margin: 2px 0 6px;
+}
+.about-release-btn {
+  margin-top: 7px;
+  border-color: rgba(var(--cyber-accent-rgb), 0.24);
+  color: var(--cyber-muted);
+}
+.about-release-btn:hover {
+  border-color: rgba(var(--cyber-accent-rgb), 0.45);
+  color: var(--cyber-text);
 }
 
 .about-update-progress { width: 100%; margin-bottom: 10px; }

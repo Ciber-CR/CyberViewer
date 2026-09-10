@@ -6833,6 +6833,13 @@ if (isElectron) {
           }
         });
       }
+      if (window.electronAPI.getUpdateStatus) {
+        window.electronAPI.getUpdateStatus().then((status) => {
+          if (status && window.__cvApplyUpdateStatus) {
+            window.__cvApplyUpdateStatus(status, { fromStartup: true });
+          }
+        }).catch(() => {});
+      }
     }
   }).catch(err => console.error('Error cargando settings:', err));
 } else {
@@ -7092,6 +7099,69 @@ $('btn-go-end').addEventListener('click', (e) => {
     }
   }
 
+  function syncUpdateReleaseDetails(root) {
+    if (!root) return;
+    const details = root.querySelector('#about-update-details');
+    const notes = root.querySelector('#about-release-notes');
+    const notesBody = root.querySelector('#about-release-notes-body');
+    const releaseBtn = root.querySelector('#about-btn-release');
+    const isRelease = updateStatus.state === 'available' || updateStatus.state === 'downloaded';
+
+    if (details) details.style.display = isRelease ? '' : 'none';
+    if (releaseBtn) releaseBtn.style.display = isRelease ? '' : 'none';
+    if (notes) notes.style.display = isRelease && updateStatus.releaseNotes ? '' : 'none';
+    renderReleaseNotes(notesBody, isRelease ? (updateStatus.releaseNotes || '') : '');
+
+    const latest = root.querySelector('#about-latest-version');
+    if (latest) latest.textContent = isRelease && updateStatus.version ? `v${updateStatus.version}` : '—';
+  }
+
+  function renderReleaseNotes(el, body) {
+    if (!el) return;
+    el.textContent = '';
+    const lines = String(body || '').replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').split('\n');
+    let list = null;
+
+    const flushList = () => {
+      if (!list) return;
+      el.appendChild(list);
+      list = null;
+    };
+
+    for (const line of lines) {
+      const heading = line.match(/^#{1,6}\s+(.*)$/);
+      const bullet = line.match(/^[-*]\s+(.*)$/);
+      if (heading) {
+        flushList();
+        const title = heading[1].trim();
+        if (title) {
+          const node = document.createElement('div');
+          node.className = 'about-release-note-heading';
+          node.textContent = title;
+          el.appendChild(node);
+        }
+      } else if (bullet) {
+        if (!list) {
+          list = document.createElement('ul');
+          list.className = 'about-release-note-list';
+        }
+        const item = document.createElement('li');
+        item.className = 'about-release-note-item';
+        item.textContent = bullet[1].trim();
+        list.appendChild(item);
+      } else if (!line.trim() || /^---+$/.test(line.trim())) {
+        flushList();
+      } else {
+        flushList();
+        const paragraph = document.createElement('p');
+        paragraph.className = 'about-release-note-paragraph';
+        paragraph.textContent = line.trim();
+        el.appendChild(paragraph);
+      }
+    }
+    flushList();
+  }
+
   function syncUpdateActions(root) {
     if (!root) return;
     const checkBtn = root.querySelector('#about-btn-update');
@@ -7121,6 +7191,7 @@ $('btn-go-end').addEventListener('click', (e) => {
     }
     renderUpdateStatusText(statusEl);
     syncUpdateBanner(root);
+    syncUpdateReleaseDetails(root);
   }
 
   window.checkUpdatesGlobal = async function() {
@@ -7202,6 +7273,20 @@ $('btn-go-end').addEventListener('click', (e) => {
               </label>
             </div>
             <div id="about-update-banner" class="about-update-banner" aria-live="polite"></div>
+            <div id="about-update-details" class="about-update-details" style="display:none">
+              <div class="about-update-version-card">
+                <span class="about-update-version-label">${t.about_current_version || 'Current'}</span>
+                <span class="about-update-version-value">${verLabel}</span>
+              </div>
+              <div class="about-update-version-card latest">
+                <span class="about-update-version-label">${t.about_latest_version || 'Latest'}</span>
+                <span id="about-latest-version" class="about-update-version-value">—</span>
+              </div>
+            </div>
+            <div id="about-release-notes" class="about-release-notes" style="display:none">
+              <div class="about-release-notes-heading">${t.about_release_notes || "What's new"}</div>
+              <div id="about-release-notes-body" class="about-release-notes-body"></div>
+            </div>
             <div id="about-update-progress" class="about-update-progress" style="display:none">
               <div class="about-update-track"><div id="about-update-bar" class="about-update-bar"></div></div>
             </div>
@@ -7216,6 +7301,9 @@ $('btn-go-end').addEventListener('click', (e) => {
                 ${t.about_install_btn}
               </button>
             </div>
+            <button type="button" id="about-btn-release" class="top-btn about-release-btn" style="display:none">
+              ${t.about_view_release || 'View release page'}
+            </button>
             <div id="about-update-status" class="about-update-status" aria-live="polite"></div>
             ${!updateInfo.canUpdate && updateInfo.portable ? `<div class="about-update-hint">${t.about_portable_hint}</div>` : ''}
           </div>
@@ -7310,6 +7398,16 @@ $('btn-go-end').addEventListener('click', (e) => {
     });
     overlay.querySelector('#about-btn-install').addEventListener('click', () => {
       window.electronAPI.installUpdate();
+    });
+    overlay.querySelector('#about-btn-release').addEventListener('click', () => {
+      const version = updateStatus.version ? String(updateStatus.version) : '';
+      const tag = version.startsWith('v') ? version : `v${version}`;
+      const url = updateStatus.releaseUrl || `https://github.com/CyberGems/CyberViewer/releases/tag/${tag}`;
+      if (window.electronAPI.openExternal) {
+        window.electronAPI.openExternal(url);
+      } else {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
     });
 
     if (unsubUpdateStatus) unsubUpdateStatus();
