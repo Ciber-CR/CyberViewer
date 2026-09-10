@@ -4101,11 +4101,16 @@ function zoomToSlider(zoom) {
  */
 function updateZoomHUD(opts = {}) {
   syncViewModeButtons();
-  const pct = Math.round(state.zoom * 100);
+  // Report zoom relative to the calibrated screen-capture size. Internally
+  // state.zoom still contains the CSS-pixel transform (1 / devicePixelRatio
+  // at capture 1:1), but the user-facing 1:1 view must read as 100%.
+  const baseZoom = getOriginalZoom();
+  const displayZoom = baseZoom > 0 ? state.zoom / baseZoom : state.zoom;
+  const pct = Math.round(displayZoom * 100);
   zoomVal.textContent = pct + '%';
   $('zoom-pct').textContent = pct + '%';
   const slider = $('zoom-slider');
-  if (slider) slider.value = zoomToSlider(state.zoom);
+  if (slider) slider.value = zoomToSlider(displayZoom);
   if (!zoomHud) return;
 
   // Floating badge is fullscreen-only
@@ -4142,7 +4147,7 @@ $('zoom-slider').addEventListener('input', (e) => {
   if (state.images.length === 0) return;
   registerCanvasInteraction();
   const val = parseInt(e.target.value, 10);
-  const newZoom = sliderToZoom(val);
+  const newZoom = sliderToZoom(val) * getOriginalZoom();
   state.viewMode = 'custom';
   state.zoom = newZoom;
   state.panX = 0;
@@ -4230,7 +4235,8 @@ function zoomAt(delta, cx, cy) {
 
   const oldZoom = state.zoom;
   let newZoom = state.zoom * (1 + delta * WHEEL_ZOOM_FACTOR);
-  newZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, newZoom));
+  const baseZoom = getOriginalZoom();
+  newZoom = Math.max(ZOOM_MIN * baseZoom, Math.min(ZOOM_MAX * baseZoom, newZoom));
 
   const ratio = newZoom / oldZoom;
   state.panX = ox + (state.panX - ox) * ratio;
@@ -4874,7 +4880,8 @@ viewerWrap.addEventListener('touchmove', e => {
       const oy = cy - rect.top  - rect.height / 2;
       state.viewMode = 'custom';
       const oldZoom = state.zoom;
-      const newZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, state.zoom * ratio));
+      const baseZoom = getOriginalZoom();
+      const newZoom = Math.max(ZOOM_MIN * baseZoom, Math.min(ZOOM_MAX * baseZoom, state.zoom * ratio));
       const r = newZoom / oldZoom;
       state.panX = ox + (state.panX - ox) * r;
       state.panY = oy + (state.panY - oy) * r;
@@ -5830,15 +5837,26 @@ window.addEventListener('resize', () => {
 function watchDisplayScale() {
   if (typeof window.matchMedia !== 'function') return;
   const dpr = Number(window.devicePixelRatio) || 1;
+  const previousBaseZoom = screenCaptureZoom(dpr);
   const query = window.matchMedia(`(resolution: ${dpr}dppx)`);
   const onChange = () => {
     if (typeof query.removeEventListener === 'function') query.removeEventListener('change', onChange);
     else if (typeof query.removeListener === 'function') query.removeListener(onChange);
-    if (state.images.length && state.current >= 0 && state.viewMode === 'original') {
-      state.zoom = getOriginalZoom();
-      state.panX = 0;
-      state.panY = 0;
-      applyTransform(false);
+    if (state.images.length && state.current >= 0) {
+      const im = state.images[state.current];
+      if (state.viewMode === 'original') {
+        state.zoom = getOriginalZoom();
+        state.panX = 0;
+        state.panY = 0;
+        applyTransform(false);
+      } else if (state.viewMode === 'custom' && previousBaseZoom > 0) {
+        // Keep custom zoom relative to the calibrated 1:1 size when the
+        // window moves between monitors with different Windows scaling.
+        state.zoom = (state.zoom / previousBaseZoom) * getOriginalZoom();
+        applyTransform(false);
+      } else if (state.viewMode === 'fit' && im && im.w) {
+        fitToWindow(im.w, im.h);
+      }
     }
     watchDisplayScale();
   };
