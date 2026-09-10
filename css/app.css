@@ -5188,3 +5188,53 @@
   @media (max-width: 620px) {
     .print-grid-layout { grid-template-columns: 1fr; }
   }
+
+/* ── TACTILE INTERACTION FEEDBACK ──
+   Shared press feedback for toolbar, titlebar, menus, sidebars and modals.
+   The visual response is intentionally small: a brief compression and a
+   slightly dimmer surface make clicks feel physical without moving layout. */
+button:not(:disabled):not(.is-disabled),
+[role="button"]:not([aria-disabled="true"]):not(.is-disabled) {
+  -webkit-tap-highlight-color: transparent;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+button:not(:disabled):not(.is-disabled):hover,
+[role="button"]:not([aria-disabled="true"]):not(.is-disabled):hover {
+  filter: brightness(1.04);
+}
+
+button:not(:disabled):not(.is-disabled):active,
+[role="button"]:not([aria-disabled="true"]):not(.is-disabled):active {
+  transform: translateY(1px) scale(0.975);
+  filter: brightness(0.93) saturate(1.06);
+  transition-duration: 70ms;
+  transition-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+button:not(:disabled):not(.is-disabled) svg {
+  transition: transform 120ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+button:not(:disabled):not(.is-disabled):active svg {
+  transform: scale(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:not(:disabled):not(.is-disabled),
+  [role="button"]:not([aria-disabled="true"]):not(.is-disabled),
+  button:not(:disabled):not(.is-disabled) svg {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  button:not(:disabled):not(.is-disabled):hover,
+  [role="button"]:not([aria-disabled="true"]):not(.is-disabled):hover,
+  button:not(:disabled):not(.is-disabled):active,
+  [role="button"]:not([aria-disabled="true"]):not(.is-disabled):active,
+  button:not(:disabled):not(.is-disabled):active svg {
+    transform: none !important;
+    filter: none !important;
+  }
+}
