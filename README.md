@@ -77,7 +77,7 @@ Most image viewers are either bloated with features you never use or so barebone
 - **Auto-start with Windows** — launch minimized on boot
 - **Global hotkey** — toggle show/hide (default: `Alt+Shift+V`)
 - **Explorer context menu** — right-click images to open in CyberViewer
-- **File associations** — set as default viewer for JPG, PNG, GIF, WEBP, BMP, TIFF
+- **File associations** — set as default viewer for JPG, PNG, GIF, WEBP, BMP, TIFF, ICO
 - **Multiple instances** — optional, for power users
 - **Auto-update** — built-in GitHub Releases updater with silent install
 - **Settings backup** — export/import configuration as JSON
@@ -231,7 +231,7 @@ Portable builds cannot self-update in-app — use **Open releases page**.
 
 ### What image formats does CyberViewer support?
 
-JPG · JPEG · PNG · GIF · WEBP · BMP · TIFF
+JPG · JPEG · PNG · GIF · WEBP · BMP · TIFF · ICO
 
 ### Can I set CyberViewer as my default image viewer?
 

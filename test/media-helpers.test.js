@@ -86,6 +86,7 @@ describe('image props helpers', () => {
   it('maps extensions to mime types', () => {
     assert.equal(mimeFromPath('a.JPG'), 'image/jpeg');
     assert.equal(mimeFromPath('C:\\\\x\\\\b.png'), 'image/png');
+    assert.equal(mimeFromPath('app.ico'), 'image/x-icon');
     assert.equal(mimeFromPath('noext'), '');
   });
 
@@ -102,6 +103,7 @@ describe('image props helpers', () => {
 
   it('detects likely alpha formats', () => {
     assert.equal(formatLikelyHasAlpha('a.png'), true);
+    assert.equal(formatLikelyHasAlpha('app.ico'), true);
     assert.equal(formatLikelyHasAlpha('a.jpg'), false);
   });
 });

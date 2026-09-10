@@ -164,7 +164,7 @@ function saveSettings(data) {
 function getFilePathFromArgs(args) {
   for (let arg of args) {
     arg = arg.replace(/^"(.*)"$/, '$1');
-    if (arg.match(/\.(jpg|jpeg|png|gif|webp|bmp|tiff|tif)$/i)) {
+    if (arg.match(/\.(jpg|jpeg|png|gif|webp|bmp|tiff|tif|ico)$/i)) {
       try {
         if (fs.existsSync(arg)) {
           const resolved = path.resolve(arg);
@@ -837,7 +837,7 @@ ipcMain.handle('open-file-dialog', async () => {
     filters: [
       {
         name: tMenu('dialog_open_filter_images', lang),
-        extensions: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff', 'tif']
+        extensions: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff', 'tif', 'ico']
       },
       { name: tMenu('dialog_open_filter_all', lang), extensions: ['*'] }
     ],
@@ -1581,8 +1581,8 @@ ipcMain.handle('register-context-menu', async (event, enable, lang) => {
       exePath = path.join(app.getAppPath(), 'dist', 'win-unpacked', 'CyberViewer.exe');
     }
 
-    const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.tiff', '.tif'];
-    const progIds = ['BMP Image', 'GIF Image', 'JPEG Image', 'PNG Image', 'WebP Image', 'TIFF Image'];
+    const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.tiff', '.tif', '.ico'];
+    const progIds = ['BMP Image', 'GIF Image', 'JPEG Image', 'PNG Image', 'WebP Image', 'TIFF Image', 'icofile'];
 
     if (enable) {
       if (!fs.existsSync(exePath)) {

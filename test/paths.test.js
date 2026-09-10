@@ -8,6 +8,7 @@ const fs = require('fs');
 const {
   cleanFsPath,
   toMediaUrl,
+  mimeForPath,
   canvasMimeForPath,
   createPathAllowlist,
   isImagePath
@@ -56,9 +57,16 @@ describe('canvasMimeForPath', () => {
   });
 });
 
+describe('mimeForPath', () => {
+  it('serves ICO files with an image MIME type', () => {
+    assert.equal(mimeForPath('assets/icon.ico'), 'image/x-icon');
+  });
+});
+
 describe('isImagePath', () => {
   it('accepts common extensions', () => {
     assert.equal(isImagePath('x.tiff'), true);
+    assert.equal(isImagePath('x.ico'), true);
     assert.equal(isImagePath('x.txt'), false);
   });
 });

@@ -492,7 +492,7 @@ function loadFiles(files, initialIdx = 0) {
       syncFavoritesToggleButtonState();
     }
   }
-  const allowedExts = new Set(['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff', 'tif']);
+  const allowedExts = new Set(['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff', 'tif', 'ico']);
   const imgs = Array.from(files).filter(f => {
     if (f.type && f.type.startsWith('image/')) return true;
     const ext = (f.name && f.name.split('.').pop() || '').toLowerCase();

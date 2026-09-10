@@ -16,8 +16,8 @@
 LangString CV_DefaultViewerTitle 1033 "Default image viewer"
 LangString CV_DefaultViewerTitle 3082 "Visor de imágenes predeterminado"
 
-LangString CV_DefaultViewerBody 1033 "CyberViewer can open JPG, JPEG, PNG, GIF, WEBP, BMP and TIFF.$\r$\n$\r$\nCheck the option below to use CyberViewer as your default image viewer for these formats (current user).$\r$\n$\r$\nYou can change defaults later in Windows Settings > Apps > Default apps."
-LangString CV_DefaultViewerBody 3082 "CyberViewer puede abrir JPG, JPEG, PNG, GIF, WEBP, BMP y TIFF.$\r$\n$\r$\nMarca la opción de abajo para usar CyberViewer como tu visor de imágenes predeterminado para estos formatos (usuario actual).$\r$\n$\r$\nPuedes cambiar esta configuración más tarde en la Configuración de Windows > Aplicaciones > Aplicaciones predeterminadas."
+LangString CV_DefaultViewerBody 1033 "CyberViewer can open JPG, JPEG, PNG, GIF, WEBP, BMP, TIFF and ICO.$\r$\n$\r$\nCheck the option below to use CyberViewer as your default image viewer for these formats (current user).$\r$\n$\r$\nYou can change defaults later in Windows Settings > Apps > Default apps."
+LangString CV_DefaultViewerBody 3082 "CyberViewer puede abrir JPG, JPEG, PNG, GIF, WEBP, BMP, TIFF e ICO.$\r$\n$\r$\nMarca la opción de abajo para usar CyberViewer como tu visor de imágenes predeterminado para estos formatos (usuario actual).$\r$\n$\r$\nPuedes cambiar esta configuración más tarde en la Configuración de Windows > Aplicaciones > Aplicaciones predeterminadas."
 
 LangString CV_DefaultViewerCheckbox 1033 "Set CyberViewer as the default image viewer"
 LangString CV_DefaultViewerCheckbox 3082 "Establecer CyberViewer como el visor de imágenes predeterminado"
@@ -88,6 +88,7 @@ FunctionEnd
     !insertmacro CV_WriteImageAssoc ".bmp"  "CyberViewer.bmp"  "BMP Image"
     !insertmacro CV_WriteImageAssoc ".tif"  "CyberViewer.tiff" "TIFF Image"
     !insertmacro CV_WriteImageAssoc ".tiff" "CyberViewer.tiff" "TIFF Image"
+    !insertmacro CV_WriteImageAssoc ".ico"  "CyberViewer.ico"  "Icon Image"
 
     WriteRegStr HKCU "Software\CyberViewer\Capabilities" "ApplicationName" "CyberViewer"
     WriteRegStr HKCU "Software\CyberViewer\Capabilities" "ApplicationDescription" "CyberViewer image viewer"
@@ -99,6 +100,7 @@ FunctionEnd
     WriteRegStr HKCU "Software\CyberViewer\Capabilities\FileAssociations" ".bmp" "CyberViewer.bmp"
     WriteRegStr HKCU "Software\CyberViewer\Capabilities\FileAssociations" ".tif" "CyberViewer.tiff"
     WriteRegStr HKCU "Software\CyberViewer\Capabilities\FileAssociations" ".tiff" "CyberViewer.tiff"
+    WriteRegStr HKCU "Software\CyberViewer\Capabilities\FileAssociations" ".ico" "CyberViewer.ico"
     WriteRegStr HKCU "Software\RegisteredApplications" "CyberViewer" "Software\CyberViewer\Capabilities"
 
     System::Call 'shell32::SHChangeNotify(i 0x08000000, i 0, p 0, p 0)'
@@ -113,6 +115,7 @@ FunctionEnd
   DeleteRegKey HKCU "Software\Classes\CyberViewer.webp"
   DeleteRegKey HKCU "Software\Classes\CyberViewer.bmp"
   DeleteRegKey HKCU "Software\Classes\CyberViewer.tiff"
+  DeleteRegKey HKCU "Software\Classes\CyberViewer.ico"
   DeleteRegKey HKCU "Software\CyberViewer"
   DeleteRegValue HKCU "Software\RegisteredApplications" "CyberViewer"
   System::Call 'shell32::SHChangeNotify(i 0x08000000, i 0, p 0, p 0)'

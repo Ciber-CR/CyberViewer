@@ -97,6 +97,12 @@
           "name": "TIFF Image",
           "description": "TIFF Image",
           "role": "Viewer"
+        },
+        {
+          "ext": ["ico"],
+          "name": "Icon Image",
+          "description": "Icon Image",
+          "role": "Viewer"
         }
       ]
     },

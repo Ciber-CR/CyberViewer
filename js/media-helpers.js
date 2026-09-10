@@ -83,7 +83,7 @@
 
   /**
    * Export a canvas to base64 buffer + path for save-image IPC.
-   * Rasterizes exotic containers (gif/webp/bmp/tiff) to PNG.
+   * Rasterizes exotic containers (gif/webp/bmp/tiff/ico) to PNG.
    * @param {HTMLCanvasElement} canvas
    * @param {string} filePath
    */
@@ -202,7 +202,7 @@
   /** True for formats that commonly carry an alpha channel. */
   function formatLikelyHasAlpha(fileNameOrPath) {
     const ext = (String(fileNameOrPath || '').split('.').pop() || '').toLowerCase();
-    return ext === 'png' || ext === 'webp' || ext === 'gif' || ext === 'tif' || ext === 'tiff' || ext === 'svg';
+    return ext === 'png' || ext === 'webp' || ext === 'gif' || ext === 'tif' || ext === 'tiff' || ext === 'ico' || ext === 'svg';
   }
 
   /**
