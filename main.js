@@ -16,7 +16,7 @@ const {
   isExistingImageFile
 } = require('./lib/paths');
 const { evictThumbCache } = require('./lib/thumb-cache');
-const { clampWindowBounds } = require('./lib/window-bounds');
+const { clampWindowBounds, MIN_W, MIN_H } = require('./lib/window-bounds');
 const { initUpdater, setAutoCheckEnabled } = require('./lib/updater');
 const { buildBackup, parseBackup } = require('./lib/settings-backup');
 const CVMedia = require('./js/media-helpers');
@@ -309,8 +309,8 @@ function createWindow() {
     y: startup.y,
     width: startup.width,
     height: startup.height,
-    minWidth: 800,
-    minHeight: 500,
+    minWidth: MIN_W,
+    minHeight: MIN_H,
     title: 'CyberViewer',
     backgroundColor: '#080a0e',
     icon: path.join(__dirname, 'assets', 'icon.ico'),

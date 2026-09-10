@@ -2,7 +2,7 @@
 
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
-const { clampWindowBounds } = require('../lib/window-bounds');
+const { MIN_W, MIN_H, clampWindowBounds } = require('../lib/window-bounds');
 
 function fakeDisplay(id, x, y, width, height, scaleFactor = 1) {
   return {
@@ -33,8 +33,17 @@ describe('clampWindowBounds', () => {
     );
     assert.ok(r.width <= primary.workArea.width);
     assert.ok(r.height <= primary.workArea.height);
-    assert.ok(r.width >= 800);
-    assert.ok(r.height >= 500);
+    assert.ok(r.width >= MIN_W);
+    assert.ok(r.height >= MIN_H);
+  });
+
+  it('enforces the chrome-safe minimum width', () => {
+    const r = clampWindowBounds(
+      { x: 100, y: 100, width: 640, height: 400 },
+      { displays, primary }
+    );
+    assert.equal(r.width, MIN_W);
+    assert.equal(r.height, MIN_H);
   });
 
   it('keeps a valid restored window on the same display', () => {
