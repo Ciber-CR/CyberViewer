@@ -221,6 +221,9 @@ const MENU_ICONS = {
   'maximize': '<path d="M8 4H6a2 2 0 0 0-2 2v2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M16 20h2a2 2 0 0 0 2-2v-2"/>',
   'pause': '<rect x="8" y="5" width="3" height="14" rx="1"/><rect x="13" y="5" width="3" height="14" rx="1"/>',
   'stop': '<path d="M8 3H16L21 8V16L16 21H8L3 16V8Z"/>',
+  'globe': '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+  'book-open': '<path d="M2 4v16a2 2 0 0 0 2 2h6a2 2 0 0 1 2 2V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><path d="M22 4v16a2 2 0 0 1-2 2h-6a2 2 0 0 0-2 2V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2z"/>',
+  'heart': '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
   'github': '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-1.5 6-6a4.6 4.6 0 0 0-1-3.5 4.2 4.2 0 0 0-.1-3.5S17.5 1 14 3.5a13.4 13.4 0 0 0-8 0C2.5 1 1.6 1.5 1.6 1.5A4.2 4.2 0 0 0 1.5 5a4.6 4.6 0 0 0-1 3.5c0 4.5 3 6 6 6a4.8 4.8 0 0 0-1 3.5v4"/><path d="M9 18c-4.5 2-5-2-7-2"/>',
   'circle-dot': '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/>',
   'tag': '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1"/>'
@@ -7218,15 +7221,34 @@ $('btn-go-end').addEventListener('click', (e) => {
           </div>
         </div>
         <div class="modal-footer about-modal-footer">
-          <a
-            class="about-footer-brand cyber-tooltip"
-            href="https://cybergems.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-tooltip="${t.about_website_tooltip}"
-            aria-label="${t.about_website_tooltip}"
-          >© CyberGems • 2026</a>
+          <span class="about-footer-copyright">
+            © 2026
+            <a
+              class="about-footer-brand cyber-tooltip"
+              href="https://cybergems.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-tooltip="${t.about_website_tooltip}"
+              aria-label="${t.about_website_tooltip}"
+            >CyberGems</a>
+          </span>
           <div class="about-footer-links">
+            <a
+              class="about-footer-icon cyber-tooltip"
+              href="https://cybergems.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-tooltip="${t.about_website_tooltip}"
+              aria-label="${t.about_website_tooltip}"
+            >${iconHtml('globe')}</a>
+            <a
+              class="about-footer-icon cyber-tooltip"
+              href="https://github.com/CyberGems/CyberViewer/wiki"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-tooltip="${t.about_docs_tooltip}"
+              aria-label="${t.about_docs_tooltip}"
+            >${iconHtml('book-open')}</a>
             <a
               class="about-footer-icon cyber-tooltip"
               href="https://github.com/CyberGems/CyberViewer"
@@ -7251,6 +7273,14 @@ $('btn-go-end').addEventListener('click', (e) => {
               data-tooltip="${t.about_releases_tooltip}"
               aria-label="${t.about_releases_tooltip}"
             >${iconHtml('tag')}</a>
+            <a
+              class="about-footer-icon about-footer-heart cyber-tooltip"
+              href="https://github.com/CyberGems/CyberViewer#%EF%B8%8F-donate"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-tooltip="${t.about_donate_tooltip}"
+              aria-label="${t.about_donate_tooltip}"
+            >${iconHtml('heart')}</a>
           </div>
         </div>
       </div>
